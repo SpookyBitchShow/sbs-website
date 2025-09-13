@@ -62,7 +62,7 @@ const latestEpisodes = await getLatestEpisodes(2);
 							</div>
 							<div class="text-center">
 								<p class="text-xs uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
-								<p class="font-bold text-lg mb-1">{episode.title}</p>
+								<p class="font-bold text-lg mb-1" style="color: #FFBD59">{episode.title}</p>
 								<p class="text-sm mb-4 opacity-70">Dauer: {episode.duration}</p>
 								<Button href={`/episode/${episode.slug}`}>ZUR EPISODE</Button>
 							</div>
