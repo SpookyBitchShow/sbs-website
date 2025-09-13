@@ -1,0 +1,189 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { getEpisodeById, getAllEpisodes } from '../../utils/rss.ts';
+
+// Import category images
+import mysticImg from '../../images/categories/NEW Mystic_.webp';
+import trueStoryImg from '../../images/categories/NEW True Story.webp';
+import trueCrimeImg from '../../images/categories/NEW True Crime.webp';
+import paranormalImg from '../../images/categories/NEW Paranormal.webp';
+import creatureImg from '../../images/categories/NEW Creature.webp';
+import newsImg from '../../images/categories/NEW News.webp';
+import filmreviewImg from '../../images/categories/NEW Filmreview.webp';
+import halloweenImg from '../../images/categories/NEW Halloween.webp';
+import creepypastaImg from '../../images/categories/NEW Creepypasta.webp';
+
+// Create category to image mapping
+const categoryImages = {
+	'mystic': mysticImg,
+	'true story': trueStoryImg,
+	'true crime': trueCrimeImg,
+	'paranormal': paranormalImg,
+	'creature': creatureImg,
+	'news': newsImg,
+	'filmreview': filmreviewImg,
+	'halloween': halloweenImg,
+	'creepypasta': creepypastaImg,
+};
+
+// Generate static paths for all episodes
+export async function getStaticPaths() {
+	const allEpisodes = await getAllEpisodes();
+	
+	return allEpisodes.map(episode => ({
+		params: { id: episode.id },
+		props: { episode }
+	}));
+}
+
+const { episode } = Astro.props;
+
+if (!episode) {
+	return Astro.redirect('/alle-folgen');
+}
+
+const categoryImage = categoryImages[episode.category as keyof typeof categoryImages] || mysticImg;
+---
+
+<Layout title={`${episode.title} - Spooky Bitch Show`} currentPage="episode">
+	<!-- Episode Header -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 py-12">
+		<div class="text-center mb-8">
+			<div class="w-64 h-64 mx-auto rounded-lg ring-4 ring-emerald-400/60 overflow-hidden mb-6 shadow-2xl">
+				<Image src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width={256} height={256} format="webp" />
+			</div>
+			<!-- <p class="text-sm uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p> -->
+			<h1 class="text-4xl font-black tracking-wider mb-4 mt-4" style="color: #41bf77;">{episode.title}</h1>
+			<div class="flex items-center justify-center gap-6 text-sm opacity-70 mb-6">
+				<span>Episodennummer: #{episode.id}</span>
+				<span>•</span>
+				<span>Dauer: {episode.duration}</span>
+				<span>•</span>
+				<span>Veröffentlicht am {episode.pubDate}</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- Audio Player Section -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 mb-8">
+		<div class="rounded-lg p-2 shadow-lg" style="background-color: #30293e;">
+			<!-- <h2 class="text-2xl font-bold mb-4" style="color: #41bf77;">Jetzt anhören</h2> -->
+			<audio class="episode-player w-full" controls preload="metadata">
+				<source src={episode.audioUrl} type="audio/mpeg" />
+				Your browser does not support the audio element.
+			</audio>
+		</div>
+	</section>
+
+	<!-- Episode Description -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 pb-8">
+		<!-- <div class="rounded-lg p-6 shadow-lg"> -->
+			<h2 class="text-2xl font-bold mb-4" style="color: #41bf77;">Über diese Episode</h2>
+			<div class="episode-description text-base leading-relaxed" set:html={episode.description}></div>
+		<!-- </div> -->
+	</section>
+
+	<!-- Navigation Section -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 pb-8">
+		<div class="flex flex-col sm:flex-row gap-4 justify-between">
+			<a 
+				href="/alle-folgen" 
+				class="inline-flex items-center justify-center rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" 
+				style="background-color: #733e7d;"
+			>
+				← Zurück zu allen Episoden
+			</a>
+			<a 
+				href={`/kategorie/${episode.category}`}
+				class="inline-flex items-center justify-center rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" 
+				style="background-color: #41bf77;"
+			>
+				Mehr aus #{episode.category.toUpperCase()}
+			</a>
+		</div>
+	</section>
+</Layout>
+
+<link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
+<script src="https://cdn.plyr.io/3.8.3/plyr.js"></script>
+
+<script>
+let player;
+
+// Initialize Plyr audio player
+function initializePlyr() {
+	// Destroy existing player first
+	if (player) {
+		player.destroy();
+		player = null;
+	}
+	
+	// Check if Plyr is available
+	if (typeof Plyr !== 'undefined') {
+		const playerElement = document.querySelector('.episode-player');
+		if (playerElement) {
+			player = new Plyr(playerElement, {
+				controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'download'],
+				seekTime: 15,
+				tooltips: { controls: true, seek: true },
+				displayDuration: true,
+				keyboard: { focused: true, global: true }
+			});
+		}
+	}
+}
+
+// Initialize on initial page load
+document.addEventListener('DOMContentLoaded', initializePlyr);
+
+// Re-initialize after page transitions
+document.addEventListener('astro:after-swap', initializePlyr);
+
+// Also listen for the page load event (fallback)
+document.addEventListener('astro:page-load', initializePlyr);
+</script>
+
+<style>
+/* Plyr audio player customization using CSS custom properties */
+:root {
+	--plyr-audio-controls-background: transparent !important;
+	--plyr-audio-control-color: #41bf77;
+	--plyr-audio-control-background-hover: rgba(115, 62, 125, 0.1);
+	--plyr-color-main: #733e7d;
+	--plyr-control-radius: 8px;
+}
+
+/* Episode description styling */
+.episode-description {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+.episode-description p {
+	margin-bottom: 1rem;
+}
+
+.episode-description strong {
+	color: #41bf77;
+	font-weight: 600;
+}
+
+.episode-description a {
+	color: #733e7d;
+	text-decoration: underline;
+	transition: opacity 0.3s ease;
+}
+
+.episode-description a:hover {
+	opacity: 0.8;
+}
+
+.episode-description ul, .episode-description ol {
+	margin: 1rem 0;
+	padding-left: 1.5rem;
+}
+
+.episode-description li {
+	margin-bottom: 0.5rem;
+}
+</style>

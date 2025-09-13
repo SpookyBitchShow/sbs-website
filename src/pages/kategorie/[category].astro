@@ -1,0 +1,164 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { getEpisodesByCategory, getAllEpisodes } from '../../utils/rss.ts';
+import CategoryFilter from '../../components/CategoryFilter.astro';
+import EpisodeCard from '../../components/EpisodeCard.astro';
+
+// Import category images
+import mysticImg from '../../images/categories/NEW Mystic_.webp';
+import trueStoryImg from '../../images/categories/NEW True Story.webp';
+import trueCrimeImg from '../../images/categories/NEW True Crime.webp';
+import paranormalImg from '../../images/categories/NEW Paranormal.webp';
+import creatureImg from '../../images/categories/NEW Creature.webp';
+import newsImg from '../../images/categories/NEW News.webp';
+import filmreviewImg from '../../images/categories/NEW Filmreview.webp';
+import halloweenImg from '../../images/categories/NEW Halloween.webp';
+import creepypastaImg from '../../images/categories/NEW Creepypasta.webp';
+
+// Create category to image mapping
+const categoryImages = {
+	'mystic': mysticImg,
+	'true story': trueStoryImg,
+	'true crime': trueCrimeImg,
+	'paranormal': paranormalImg,
+	'creature': creatureImg,
+	'news': newsImg,
+	'filmreview': filmreviewImg,
+	'halloween': halloweenImg,
+	'creepypasta': creepypastaImg,
+};
+
+// Category display names
+const categoryNames = {
+	'mystic': 'Mystic',
+	'true story': 'True Story',
+	'true crime': 'True Crime',
+	'paranormal': 'Paranormal',
+	'creature': 'Creature',
+	'news': 'News',
+	'filmreview': 'Filmreview',
+	'halloween': 'Halloween',
+	'creepypasta': 'Creepypasta',
+};
+
+// Generate static paths for all categories
+export async function getStaticPaths() {
+	const categories = [
+		'mystic', 'true story', 'true crime', 'paranormal', 
+		'creature', 'news', 'filmreview', 'halloween', 'creepypasta'
+	];
+	
+	return categories.map(category => ({
+		params: { category },
+		props: { category }
+	}));
+}
+
+const { category } = Astro.params;
+const episodes = await getEpisodesByCategory(category);
+const categoryDisplayName = categoryNames[category] || category;
+const categoryImage = categoryImages[category];
+---
+
+<Layout title={`${categoryDisplayName} - Spooky Bitch Show`} currentPage="kategorie">
+	<!-- Category Header -->
+	<section class="relative z-10 mx-auto max-w-6xl px-4 py-12">
+		<div class="flex items-center justify-center gap-8 mb-8">
+			<div class="w-32 h-32 rounded-lg overflow-hidden ring-4 ring-emerald-400/60">
+				<Image src={categoryImage} alt={`#${categoryDisplayName}`} class="w-full h-full object-cover" width={128} height={128} format="webp" />
+			</div>
+			<div>
+				<h1 class="text-6xl font-black tracking-wider mb-4" style="color: #41bf77;">#{categoryDisplayName.toUpperCase()}</h1>
+				<p class="text-xl opacity-80" style="color: #41bf77;">{episodes.length} Episoden in dieser Kategorie</p>
+			</div>
+		</div>
+		
+		<!-- Category Filter Section -->
+		<div class="mb-12">
+			<CategoryFilter currentCategory={category} />
+		</div>
+	</section>
+
+	<!-- Episodes List -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 pb-8">
+		{episodes.length === 0 ? (
+			<div class="text-center py-12">
+				<p class="text-xl opacity-70" style="color: #41bf77;">Noch keine Episoden in dieser Kategorie.</p>
+			</div>
+		) : (
+			<div class="space-y-4">
+				{episodes.map((episode) => (
+					<EpisodeCard episode={episode} />
+				))}
+			</div>
+		)}
+	</section>
+</Layout>
+
+<link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
+<script src="https://cdn.plyr.io/3.8.3/plyr.js"></script>
+
+<script>
+let players = [];
+
+// Initialize Plyr audio players
+function initializePlyr() {
+	// Destroy existing players first
+	if (players.length > 0) {
+		players.forEach(player => player.destroy());
+		players = [];
+	}
+	
+	// Check if Plyr is available
+	if (typeof Plyr !== 'undefined') {
+		const playerElements = document.querySelectorAll('.episode-player');
+		if (playerElements.length > 0) {
+			players = Plyr.setup('.episode-player', {
+				controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume'],
+				seekTime: 10,
+				tooltips: { controls: true, seek: true }
+			});
+		}
+	}
+}
+
+// Initialize on initial page load
+document.addEventListener('DOMContentLoaded', initializePlyr);
+
+// Re-initialize after page transitions
+document.addEventListener('astro:after-swap', initializePlyr);
+
+// Also listen for the page load event (fallback)
+document.addEventListener('astro:page-load', initializePlyr);
+
+function toggleDescription(button) {
+	const episodeCard = button.closest('.rounded-lg');
+	const description = episodeCard.querySelector('.episode-description');
+	const arrow = button.querySelector('svg');
+	
+	if (description.classList.contains('line-clamp-2')) {
+		// Expand
+		description.classList.remove('line-clamp-2');
+		arrow.style.transform = 'rotate(180deg)';
+	} else {
+		// Collapse
+		description.classList.add('line-clamp-2');
+		arrow.style.transform = 'rotate(0deg)';
+	}
+}
+
+// Make toggleDescription globally available
+window.toggleDescription = toggleDescription;
+</script>
+
+<style>
+/* Plyr audio player customization using CSS custom properties */
+:root {
+	--plyr-audio-controls-background: transparent !important;
+	--plyr-audio-control-color: #41bf77;
+	--plyr-audio-control-background-hover: rgba(115, 62, 125, 0.1);
+	--plyr-color-main: #733e7d;
+	--plyr-control-radius: 8px;
+}
+</style>

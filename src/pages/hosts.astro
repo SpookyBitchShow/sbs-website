@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+// Import avatar images
+import avatarRikku from '../images/avatar_rikku.webp';
+import avatarTai from '../images/avatar_tai.webp';
+---
+
+<Layout title="Die Hosts - Spooky Bitch Show" currentPage="hosts">
+	<!-- Die Hosts Section -->
+	<section class="relative z-10 mx-auto max-w-6xl px-4 py-12">
+		<h2 class="text-6xl font-black tracking-wider text-center mb-16" style="color: #41bf77;">DIE HOSTS</h2>
+		
+		<!-- Hosts Grid -->
+		<div class="flex gap-24 justify-center items-start">
+			<!-- Rikku -->
+			<div class="text-center max-w-sm">
+				<div class="w-48 h-48 mx-auto mb-8 relative">
+					<div class="w-full h-full rounded-full border-4 border-green-400 overflow-hidden">
+						<Image src={avatarRikku} alt="Rikku" class="w-full h-full object-cover" width={192} height={192} />
+					</div>
+				</div>
+				<h3 class="text-4xl font-bold mb-6" style="color: #41bf77;">RIKKU</h3>
+				
+				<div class="space-y-4 text-center">
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">GEBOREN:</p>
+						<p class="text-md" style="color: #41bf77;">1989</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">INTERESSEN:</p>
+						<p class="text-md" style="color: #41bf77;">KUNST, FOTOGRAFIE, MUSIK, MORGENTIERCHEN, NATUR, TIERE</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">LIEBLINGSKATEGORIE:</p>
+						<p class="text-md" style="color: #41bf77;">TRUE CRIME, PARANORMAL, CREATURE</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-2" style="color: #41bf77;">EIN PAAR WORTE:</p>
+						<p class="text-lgleading-relaxed" style="color: #41bf77;">RIKKU KONNTE SICH SCHON IMMER FÜR DAS ÜBERSINNELICHE UND UNFASSBARE FASZINIEREN. NICHT NUR WEIL SIE SONNTAGS STETS X-FACTOR - DAS UNFASSBARE GESCHAUT HAT! AUCH VOR MORD UND TOTSCHLAG MACHT SIE KEINEN HALT! AUSSER IM ECHTEN LEBEN - EIN TROPFEN BLUT UND SIE HYPERVENTILIERT.</p>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Tai -->
+			<div class="text-center max-w-sm">
+				<div class="w-48 h-48 mx-auto mb-8 relative">
+					<div class="w-full h-full rounded-full border-4 border-green-400 overflow-hidden">
+						<Image src={avatarTai} alt="Tai" class="w-full h-full object-cover" width={192} height={192} />
+					</div>
+				</div>
+				<h3 class="text-4xl font-bold mb-6" style="color: #41bf77;">TAI</h3>
+				
+				<div class="space-y-4 text-center">
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">GEBOREN:</p>
+						<p class="text-md" style="color: #41bf77;">1989</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">INTERESSEN:</p>
+						<p class="text-md" style="color: #41bf77;">LESEN, SCHREIBEN, MUSIK, TRUE CRIME, PARANORMALES, NATUR, TIERE</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-1" style="color: #41bf77;">LIEBLINGSKATEGORIE:</p>
+						<p class="text-md" style="color: #41bf77;">TRUE CRIME, PARANORMAL, MYSTIC</p>
+					</div>
+					
+					<div>
+						<p class="text-lgfont-bold mb-2" style="color: #41bf77;">EIN PAAR WORTE:</p>
+						<p class="text-lgleading-relaxed" style="color: #41bf77;">TAI HAT SICH SEIT IHRER KINDHEIT FÜR DAS PARANORMALE UND MYSTISCHE INTERESSIERT. MÖHGEERLICH DURCH X-FACTOR UND DER TITANIC HALF KONNTE SIE ALS KIND NACHTS GRUSELIGE ANSEHEN OHNE SICH GANZ MUTIG UNTER DER DECKE ZU VERSTECKEN IN DER NACHT.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Zur Entstehung Section -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 py-16 mt-16">
+		<h2 class="text-4xl font-bold text-center mb-8" style="color: #41bf77;">ZUR ENTSTEHUNG DES PODCASTS:</h2>
+		
+		<div class="space-y-6 text-lgleading-relaxed text-center" style="color: #41bf77;">
+			<p>DIE IDEE ZU DIESEM PODCAST ENTSTAND IN EINER NACHT UND NEBEL AKTION. WÄHREND EINER NÄCHTLICHEN GAMING-SESSION, IN DENEN DAS HACKBEIN GESCHLUNGEN SOWIE GENERATIONEN GEPRESSET WURDEN, KAMEN BEIDE AUF DAS THEMA "DRECKSLÜGNER" ZU SPRECHEN.</p>
+			
+			<p>DAS WAR DER STARTSCHUSS, UM ÜBER ETWAIGE PODCAST-ABENTEUER ZU PHILOSOPHIEREN.</p>
+			
+			<p>WIE WIR MÖCHTEN WAR DIE IDEE GEBOREN, DIE IM APRIL 2023 AN DEN START GING.</p>
+		</div>
+	</section>
+</Layout>

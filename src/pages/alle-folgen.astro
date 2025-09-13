@@ -1,0 +1,93 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getAllEpisodes } from '../utils/rss.ts';
+import CategoryFilter from '../components/CategoryFilter.astro';
+import EpisodeCard from '../components/EpisodeCard.astro';
+
+// Fetch real episode data from RSS feed
+const episodes = await getAllEpisodes();
+---
+
+<Layout title="Alle Folgen - Spooky Bitch Show" currentPage="alle-folgen">
+
+	<!-- All Episodes -->
+	<section class="relative z-10 mx-auto max-w-4xl px-4 py-8 mt-8">
+		<h2 class="text-5xl font-black tracking-wider text-center mb-8" style="color: #41bf77;">Alle Folgen</h2>
+		
+		<!-- Filter Section -->
+		<CategoryFilter currentCategory="alle" />
+		
+		<div class="space-y-4 mt-8">
+			{episodes.map((episode) => (
+				<EpisodeCard episode={episode} />
+			))}
+		</div>
+	</section>
+</Layout>
+
+<link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
+<script src="https://cdn.plyr.io/3.8.3/plyr.js"></script>
+
+<script>
+let players = [];
+
+// Initialize Plyr audio players
+function initializePlyr() {
+	// Destroy existing players first
+	if (players.length > 0) {
+		players.forEach(player => player.destroy());
+		players = [];
+	}
+	
+	// Check if Plyr is available
+	if (typeof Plyr !== 'undefined') {
+		const playerElements = document.querySelectorAll('.episode-player');
+		if (playerElements.length > 0) {
+			players = Plyr.setup('.episode-player', {
+				controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume'],
+				seekTime: 10,
+				tooltips: { controls: true, seek: true }
+			});
+		}
+	}
+}
+
+// Initialize on initial page load
+document.addEventListener('DOMContentLoaded', initializePlyr);
+
+// Re-initialize after page transitions
+document.addEventListener('astro:after-swap', initializePlyr);
+
+// Also listen for the page load event (fallback)
+document.addEventListener('astro:page-load', initializePlyr);
+
+function toggleDescription(button) {
+	const episodeCard = button.closest('.rounded-lg');
+	const description = episodeCard.querySelector('.episode-description');
+	const arrow = button.querySelector('svg');
+	
+	if (description.classList.contains('line-clamp-2')) {
+		// Expand
+		description.classList.remove('line-clamp-2');
+		arrow.style.transform = 'rotate(180deg)';
+	} else {
+		// Collapse
+		description.classList.add('line-clamp-2');
+		arrow.style.transform = 'rotate(0deg)';
+	}
+}
+
+// Make toggleDescription globally available
+window.toggleDescription = toggleDescription;
+</script>
+
+<style>
+/* Plyr audio player customization using CSS custom properties */
+:root {
+	--plyr-audio-controls-background: transparent !important;
+	--plyr-audio-control-color: #41bf77;
+	--plyr-audio-control-background-hover: rgba(115, 62, 125, 0.1);
+	--plyr-color-main: #733e7d;
+	--plyr-control-radius: 8px;
+}
+</style>

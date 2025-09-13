@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import { getLatestEpisodes } from '../utils/rss.ts';
+
+// Import images
+import microphoneImg from '../images/microphone.webp';
+import mysticImg from '../images/categories/NEW Mystic_.webp';
+import trueStoryImg from '../images/categories/NEW True Story.webp';
+import trueCrimeImg from '../images/categories/NEW True Crime.webp';
+import paranormalImg from '../images/categories/NEW Paranormal.webp';
+import creatureImg from '../images/categories/NEW Creature.webp';
+import newsImg from '../images/categories/NEW News.webp';
+import filmreviewImg from '../images/categories/NEW Filmreview.webp';
+import halloweenImg from '../images/categories/NEW Halloween.webp';
+import creepypastaImg from '../images/categories/NEW Creepypasta.webp';
+
+// Create category to image mapping
+const categoryImages = {
+	'mystic': mysticImg,
+	'true story': trueStoryImg,
+	'true crime': trueCrimeImg,
+	'paranormal': paranormalImg,
+	'creature': creatureImg,
+	'news': newsImg,
+	'filmreview': filmreviewImg,
+	'halloween': halloweenImg,
+	'creepypasta': creepypastaImg,
+};
+
+// Fetch latest episodes from RSS feed
+const latestEpisodes = await getLatestEpisodes(2);
+---
+
+<Layout title="Spooky Bitch Show" currentPage="home">
+
+			<!-- Intro Block -->
+			<section id="home" class="relative z-10 mx-auto max-w-6xl px-4 py-12">
+				<div class="flex items-center justify-center gap-6">
+					<div class="h-48 w-48 flex items-center justify-center shrink-0">
+						<Image src={microphoneImg} alt="Microphone" class="h-48 w-48 object-contain" width={192} height={192} />
+					</div>
+					<div style="color: #41bf77;">
+						<p class="text-2xl font-bold uppercase tracking-wider">Ein Podcast voller Spannung, Grusel und Mystery</p>
+						<p class="text-2xl font-bold uppercase tracking-wider">Neue Folgen alle 2 Wochen</p>
+						<p class="text-2xl font-bold uppercase tracking-wider">mit euren Hosts <a href="/hosts" class="hover:opacity-80 transition-opacity duration-300" style="color: #733e7d;">Rikku & Tai</a></p>
+					</div>
+				</div>
+			</section>
+
+			<!-- Last Episodes -->
+			<section class="relative z-10 mx-auto max-w-6xl px-4 py-8 mt-8">
+				<h2 class="text-5xl font-black tracking-wider text-center mb-8" style="color: #41bf77;">Unsere letzten Episoden</h2>
+				<div class="flex gap-16 justify-center max-w-4xl mx-auto">
+					{latestEpisodes.map((episode) => (
+						<div class="rounded-lg p-4 shadow-lg w-64" style="background-color: #30293e;">
+							<div class="aspect-square w-full rounded overflow-hidden mb-4">
+								<Image src={categoryImages[episode.category]} alt={episode.title} class="w-full h-full object-cover" width={256} height={256} />
+							</div>
+							<div class="text-center">
+								<p class="text-xs uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
+								<p class="font-bold text-lg mb-1">{episode.title}</p>
+								<p class="text-sm mb-4 opacity-70">Dauer: {episode.duration}</p>
+								<a href={`/episode/${episode.id}`} class="rounded-full px-6 py-2 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">PLAY</a>
+							</div>
+						</div>
+					))}
+				</div>
+				<div class="text-center mt-8">
+					<a href="/alle-folgen" class="inline-block rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">ZU ALLEN EPISODEN</a>
+				</div>
+			</section>
+
+			<!-- Categories -->
+			<section class="relative z-10 mx-auto max-w-6xl px-4 py-8 mt-16">
+				<h2 class="text-5xl font-black tracking-wider text-center mb-8" style="color: #41bf77;">Unsere Kategorien</h2>
+				<div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
+					<a href="/kategorie/true story" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={trueStoryImg} alt="#TRUE STORY" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/true crime" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={trueCrimeImg} alt="#TRUE CRIME" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/paranormal" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={paranormalImg} alt="#PARANORMAL" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/creature" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={creatureImg} alt="#CREATURE" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/mystic" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={mysticImg} alt="#MYSTIC" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/news" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={newsImg} alt="#NEWS" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/filmreview" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={filmreviewImg} alt="#FILMREVIEW" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/halloween" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={halloweenImg} alt="#HALLOWEEN" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+					<a href="/kategorie/creepypasta" class="aspect-square w-full rounded overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+						<Image src={creepypastaImg} alt="#CREEPYPASTA" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+					</a>
+				</div>
+			</section>
+
+</Layout>

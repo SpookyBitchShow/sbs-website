@@ -1,0 +1,41 @@
+---
+export interface Props {
+	currentCategory?: string;
+}
+
+const { currentCategory } = Astro.props;
+
+const categories = [
+	{ slug: 'mystic', name: 'MYSTIC' },
+	{ slug: 'true crime', name: 'TRUE CRIME' },
+	{ slug: 'paranormal', name: 'PARANORMAL' },
+	{ slug: 'creature', name: 'CREATURE' },
+	{ slug: 'creepypasta', name: 'CREEPYPASTA' },
+	{ slug: 'true story', name: 'TRUE STORY' },
+	{ slug: 'news', name: 'NEWS' },
+	{ slug: 'filmreview', name: 'FILMREVIEW' },
+	{ slug: 'halloween', name: 'HALLOWEEN' },
+];
+---
+
+<!-- Category Filter Section -->
+<div class="max-w-4xl mx-auto">
+	<div class="flex flex-wrap justify-center gap-4">
+	<a 
+		href="/alle-folgen" 
+		class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-all duration-300 text-white" 
+		style={currentCategory === undefined || currentCategory === 'alle' ? 'background-color: #41bf77;' : 'background-color: #733e7d;'}
+	>
+		ALLE
+	</a>
+	{categories.map((category) => (
+		<a 
+			href={`/kategorie/${category.slug}`}
+			class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-all duration-300 text-white"
+			style={currentCategory === category.slug ? 'background-color: #41bf77;' : 'background-color: #733e7d;'}
+		>
+			{category.name}
+		</a>
+	))}
+	</div>
+</div>

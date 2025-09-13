@@ -1,0 +1,189 @@
+---
+import { Image } from 'astro:assets';
+import { ClientRouter } from "astro:transitions";
+
+// Import images
+import portraitImg from '../images/portrait.webp';
+import sloganImg from '../images/slogan.webp';
+import backgroundImg from '../images/background.webp';
+import backgroundFooterImg from '../images/background_footer.webp';
+
+// Import social media icons
+import instagramIcon from '../images/socials/instagram.webp';
+import spotifyIcon from '../images/socials/spotify.webp';
+import whatsappIcon from '../images/socials/whatsapp.webp';
+import youtubeIcon from '../images/socials/youtube.webp';
+import discordIcon from '../images/socials/discord.webp';
+import applePodcastsIcon from '../images/socials/apple_podcasts.webp';
+
+// Social media data
+const socialLinks = [
+	{
+		name: "Instagram",
+		url: "https://www.instagram.com/spookybitchshow.podcast",
+		icon: instagramIcon
+	},
+	{
+		name: "Spotify", 
+		url: "https://open.spotify.com/show/37fsCXxuRBnGRIJTxn0ibe",
+		icon: spotifyIcon
+	},
+	{
+		name: "Apple Podcasts",
+		url: "https://podcasts.apple.com/de/podcast/spooky-bitch-show-dein-grusel-und-mystery-podcast/id1683190955",
+		icon: applePodcastsIcon
+	},
+	{
+		name: "YouTube",
+		url: "https://www.youtube.com/@SpookyBitchShow", 
+		icon: youtubeIcon
+	},
+	{
+		name: "WhatsApp",
+		url: "https://wa.me/4915157841563",
+		icon: whatsappIcon
+	},
+	{
+		name: "Discord",
+		url: "https://discord.com/invite/GPBWbgmB4E",
+		icon: discordIcon
+	}
+];
+
+export interface Props {
+	title?: string;
+	currentPage?: string;
+}
+
+const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
+---
+
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		
+		<!-- Performance and compression hints -->
+		<meta http-equiv="Content-Encoding" content="gzip" />
+		<meta name="format-detection" content="telephone=no" />
+		<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+		<link rel="preconnect" href="//www.instagram.com" crossorigin />
+		<link rel="preconnect" href="//open.spotify.com" crossorigin />
+		<style>
+			@font-face {
+				font-family: 'WCManoNegra';
+				src: url('/fonts/WCManoNegraBta.woff') format('woff');
+				font-weight: normal;
+				font-style: normal;
+				font-display: swap;
+			}
+
+			/* Page Transition Styles */
+			::view-transition-old(root),
+			::view-transition-new(root) {
+				animation-duration: 0.3s;
+			}
+
+			::view-transition-old(root) {
+				animation-name: fade-out;
+			}
+
+			::view-transition-new(root) {
+				animation-name: fade-in;
+			}
+
+			@keyframes fade-out {
+				from { opacity: 1; }
+				to { opacity: 0; }
+			}
+
+			@keyframes fade-in {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+
+			/* Navigation transition styles */
+			nav a {
+				view-transition-name: nav-item;
+			}
+
+			/* Header portrait transition */
+			.portrait {
+				view-transition-name: portrait;
+			}
+
+			/* Main content transition */
+			main {
+				view-transition-name: main-content;
+			}
+		</style>
+		<link rel="preload" as="image" href={backgroundImg.src} />
+		<link rel="preload" as="image" href={sloganImg.src} />
+		<link rel="preload" as="image" href={portraitImg.src} />
+		<link rel="stylesheet" href="/src/styles/global.css" />
+		
+		<!-- Page Transitions -->
+		<ClientRouter />
+	</head>
+	<body class="min-h-screen" style="background-color: #10100f;font-family: 'WCManoNegra', system-ui, sans-serif; color: #41bf77; text-transform: uppercase;">
+		<div class="relative min-h-screen">
+			<div class="fixed inset-0 pointer-events-none z-0"></div>
+			
+			<!-- Header -->
+			<div class="">
+				<header class="relative mx-auto max-w-6xl px-12 pt-8 pb-4">
+					<div class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-40" style={`background-image: url('${backgroundImg.src}');`}></div>
+					<div class="relative z-10">
+						<div class="flex items-start gap-6">
+							<!-- Logo / Slogan Stack -->
+							<div class="flex flex-col items-center gap-4">
+								<div class="shrink-0 h-28 w-28 rounded-full ring-4 ring-emerald-400/60 overflow-hidden mt-6 portrait">
+									<Image src={portraitImg} alt="Portrait" class="h-full w-full object-cover" width={112} height={112} format="webp" />
+								</div>
+								<Image src={sloganImg} alt="Der Grusel und Mystery Podcast" class="w-[420px] max-w-full mb-12" width={840} height={210} format="webp" />
+							</div>
+						</div>
+					</div>
+				</header>
+			</div>
+
+			<!-- Slanted Nav Tabs -->
+			<div class="relative z-10 mx-auto max-w-6xl -mt-4 flex items-center justify-between">
+				<nav class="nav-tabs gap-1">
+					<a href="/" class={`tab ${currentPage === "home" ? "tab--green" : "tab--purple"} text-sm tracking-wide`}><span class="tab__label">Home</span></a>
+					<a href="/hosts" class={`tab ${currentPage === "hosts" ? "tab--green" : "tab--purple"} text-sm tracking-wide`}><span class="tab__label">Die Hosts</span></a>
+					<a href="/alle-folgen" class={`tab ${currentPage === "alle-folgen" ? "tab--green" : "tab--purple"} text-sm tracking-wide`}><span class="tab__label">Alle Folgen</span></a>
+				</nav>
+				
+				<!-- Social Media Icons -->
+				<div class="flex items-center gap-4">
+					{socialLinks.map((social) => (
+						<a href={social.url} target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity duration-300">
+							<Image src={social.icon} alt={social.name} class="w-8 h-8 object-contain" width={32} height={32} format="webp" />
+						</a>
+					))}
+				</div>
+			</div>
+
+			<!-- Main Content -->
+			<main>
+				<slot />
+			</main>
+
+			<!-- Footer -->
+			<div>
+				<footer class="relative z-10 mx-auto max-w-6xl px-4 pb-16 mt-16">
+					<div class="relative rounded-lg overflow-hidden h-85 mb-8">
+						<div class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-40" style={`background-image: url('${backgroundFooterImg.src}');`}></div>
+					</div>
+					<div class="text-center">
+						<a href="https://www.mein.online-impressum.de/spookybitchshow/" class="text-4xl font-bold tracking-wider hover:opacity-80 transition-opacity duration-300" style="color: #41bf77;">IMPRESSUM</a>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>
