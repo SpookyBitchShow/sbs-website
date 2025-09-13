@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import Button from './Button.astro';
 
 // Import category images
 import mysticImg from '../images/categories/NEW Mystic_.webp';
@@ -56,7 +57,7 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 					<p class="text-md opacity-70 mt-1">Dauer: {episode.duration} • Veröffentlicht am {episode.pubDate}</p>
 				</div>
 				<div class="flex items-center gap-2 flex-shrink-0">
-					<a href={`/episode/${episode.slug}`} class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">Details</a>
+					<Button href={`/episode/${episode.slug}`} size="sm">Details</Button>
 				</div>
 			</div>
 		</div>
