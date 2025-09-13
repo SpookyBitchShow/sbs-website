@@ -17,6 +17,7 @@
 	align-items: center;
 	justify-content: center;
 	padding: 0.5rem 1.5rem;
+	width: 180px;
 	font-weight: 700;
 	font-style: italic;
 	text-transform: uppercase;
@@ -43,6 +44,18 @@
 .nav-tabs .tab:first-child {
 	/* first tab: square left edge, slanted right (flipped set) */
 	clip-path: polygon(0 0, calc(100% - var(--slant)) 0, 100% 100%, 0 100%);
+}
+
+/* On small screens, make the first tab slanted on the left side too */
+@media (max-width: 768px) {
+	.nav-tabs .tab:first-child {
+		clip-path: polygon(0 0, calc(100% - var(--slant)) 0, 100% 100%, var(--slant) 100%);
+	}
+	
+	.nav-tabs .tab {
+		width: calc(100vw / 3 - 1rem);
+		max-width: 120px;
+	}
 }
 
 .nav-tabs .tab + .tab {
