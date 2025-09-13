@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
 
 // Import images
 import portraitImg from '../images/portrait.webp';
@@ -61,7 +62,7 @@ const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
 <html lang="de">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
