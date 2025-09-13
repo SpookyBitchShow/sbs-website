@@ -28,7 +28,7 @@ export async function GET() {
     
     // Base URL for your site - hardcoded since we can't access request at build time
     // You should replace this with your actual domain
-    const baseUrl = 'https://your-domain.github.io';
+    const baseUrl = 'https://spookybitchshow.de';
     
     // Replace links in the RSS XML
     let modifiedXml = originalXml;
