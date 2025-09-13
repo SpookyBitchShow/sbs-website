@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import { getLatestEpisodes } from '../utils/rss.ts';
+import Button from '../components/Button.astro';
 
 // Import images
 import microphoneImg from '../images/microphone.webp';
@@ -17,15 +18,15 @@ import creepypastaImg from '../images/categories/NEW Creepypasta.webp';
 
 // Create category to image mapping
 const categoryImages = {
-	'mystic': mysticImg,
 	'true story': trueStoryImg,
 	'true crime': trueCrimeImg,
 	'paranormal': paranormalImg,
+	'mystic': mysticImg,
 	'creature': creatureImg,
+	'creepypasta': creepypastaImg,
 	'news': newsImg,
 	'filmreview': filmreviewImg,
 	'halloween': halloweenImg,
-	'creepypasta': creepypastaImg,
 };
 
 // Fetch latest episodes from RSS feed
@@ -51,7 +52,7 @@ const latestEpisodes = await getLatestEpisodes(2);
 			<!-- Last Episodes -->
 			<section class="relative z-10 mx-auto max-w-6xl px-4 py-8 mt-8">
 				<h2 class="text-5xl font-black tracking-wider text-center mb-8" style="color: #41bf77;">Unsere letzten Episoden</h2>
-				<div class="flex gap-16 justify-center max-w-4xl mx-auto">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-4xl mx-auto justify-items-center">
 					{latestEpisodes.map((episode) => (
 						<div class="rounded-lg p-4 shadow-lg w-64" style="background-color: #30293e;">
 							<div class="aspect-square w-full rounded overflow-hidden mb-4">
@@ -61,47 +62,25 @@ const latestEpisodes = await getLatestEpisodes(2);
 								<p class="text-xs uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
 								<p class="font-bold text-lg mb-1">{episode.title}</p>
 								<p class="text-sm mb-4 opacity-70">Dauer: {episode.duration}</p>
-								<a href={`/episode/${episode.slug}`} class="rounded-full px-6 py-2 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">PLAY</a>
+								<Button href={`/episode/${episode.slug}`}>ZUR EPISODE</Button>
 							</div>
 						</div>
 					))}
 				</div>
 				<div class="text-center mt-8">
-					<a href="/alle-folgen" class="inline-block rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">ZU ALLEN EPISODEN</a>
+					<Button href="/alle-folgen" size="lg">ZU ALLEN EPISODEN</Button>
 				</div>
 			</section>
 
 			<!-- Categories -->
 			<section class="relative z-10 mx-auto max-w-6xl px-4 py-8 mt-16">
 				<h2 class="text-5xl font-black tracking-wider text-center mb-8" style="color: #41bf77;">Unsere Kategorien</h2>
-				<div class="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
-					<a href="/kategorie/true story" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={trueStoryImg} alt="#TRUE STORY" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/true crime" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={trueCrimeImg} alt="#TRUE CRIME" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/paranormal" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={paranormalImg} alt="#PARANORMAL" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/creature" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={creatureImg} alt="#CREATURE" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/mystic" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={mysticImg} alt="#MYSTIC" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/news" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={newsImg} alt="#NEWS" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/filmreview" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={filmreviewImg} alt="#FILMREVIEW" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/halloween" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={halloweenImg} alt="#HALLOWEEN" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
-					<a href="/kategorie/creepypasta" class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={creepypastaImg} alt="#CREEPYPASTA" class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
-					</a>
+				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
+					{Object.entries(categoryImages).map(([categoryName, categoryImage]) => (
+						<a href={`/kategorie/${categoryName}`} class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
+							<Image src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={200} height={200} />
+						</a>
+					))}
 				</div>
 			</section>
 
