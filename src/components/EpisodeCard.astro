@@ -29,6 +29,7 @@ export interface Props {
 	episode: {
 		id: string;
 		title: string;
+		slug: string;
 		description: string;
 		pubDate: string;
 		duration: string;
@@ -51,11 +52,11 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 			<div class="flex items-start justify-between gap-4">
 				<div class="flex-1 min-w-0">
 					<p class="text-xs uppercase tracking-wide mb-1" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
-					<a href={`/episode/${episode.id}`} class="font-bold text-xl hover:opacity-80 transition-opacity duration-300 block truncate">{episode.title}</a>
+					<a href={`/episode/${episode.slug}`} class="font-bold text-xl hover:opacity-80 transition-opacity duration-300 block truncate">{episode.title}</a>
 					<p class="text-md opacity-70 mt-1">Dauer: {episode.duration} • Veröffentlicht am {episode.pubDate}</p>
 				</div>
 				<div class="flex items-center gap-2 flex-shrink-0">
-					<a href={`/episode/${episode.id}`} class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">Details</a>
+					<a href={`/episode/${episode.slug}`} class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">Details</a>
 				</div>
 			</div>
 		</div>
