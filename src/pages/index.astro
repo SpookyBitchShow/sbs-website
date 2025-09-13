@@ -61,7 +61,7 @@ const latestEpisodes = await getLatestEpisodes(2);
 								<p class="text-xs uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
 								<p class="font-bold text-lg mb-1">{episode.title}</p>
 								<p class="text-sm mb-4 opacity-70">Dauer: {episode.duration}</p>
-								<a href={`/episode/${episode.id}`} class="rounded-full px-6 py-2 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">PLAY</a>
+								<a href={`/episode/${episode.slug}`} class="rounded-full px-6 py-2 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" style="background-color: #733e7d;">PLAY</a>
 							</div>
 						</div>
 					))}
