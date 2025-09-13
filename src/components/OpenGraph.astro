@@ -14,17 +14,18 @@ const {
 	title = "Spooky Bitch Show - Der Grusel und Mystery Podcast",
 	description = "Ein Podcast voller Spannung, Grusel und Mystery. Neue Folgen alle 2 Wochen mit euren Hosts Rikku & Tai.",
 	type = "website",
-	image = "/images/og-home.png",
+	image,
 	url = Astro.url.href,
 	siteName = "Spooky Bitch Show",
 	episodeTitle,
 	episodeDescription
 } = Astro.props;
 
-// Use episode-specific data if provided
+// Use episode-specific data if provided, otherwise default to home image
 const ogTitle = episodeTitle ? `${episodeTitle} - ${siteName}` : title;
 const ogDescription = episodeDescription || description;
 const ogType = episodeTitle ? "article" : type;
+const ogImage = image || "/images/og-home.png";
 
 // Safely construct the image URL
 const getImageUrl = (imagePath: string) => {
@@ -47,7 +48,7 @@ const getImageUrl = (imagePath: string) => {
 <meta property="og:url" content={url} />
 <meta property="og:title" content={ogTitle} />
 <meta property="og:description" content={ogDescription} />
-<meta property="og:image" content={getImageUrl(image)} />
+<meta property="og:image" content={getImageUrl(ogImage)} />
 <meta property="og:site_name" content={siteName} />
 
 <!-- Twitter -->
@@ -55,7 +56,7 @@ const getImageUrl = (imagePath: string) => {
 <meta name="twitter:url" content={url} />
 <meta name="twitter:title" content={ogTitle} />
 <meta name="twitter:description" content={ogDescription} />
-<meta name="twitter:image" content={getImageUrl(image)} />
+<meta name="twitter:image" content={getImageUrl(ogImage)} />
 
 <!-- Additional meta tags -->
 <meta name="description" content={ogDescription} />
