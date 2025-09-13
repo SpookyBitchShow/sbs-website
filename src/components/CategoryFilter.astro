@@ -1,4 +1,6 @@
 ---
+import Button from './Button.astro';
+
 export interface Props {
 	currentCategory?: string;
 }
@@ -21,21 +23,21 @@ const categories = [
 <!-- Category Filter Section -->
 <div class="max-w-4xl mx-auto">
 	<div class="flex flex-wrap justify-center gap-4">
-	<a 
-		href="/alle-folgen" 
-		class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-all duration-300 text-white" 
-		style={currentCategory === undefined || currentCategory === 'alle' ? 'background-color: #41bf77;' : 'background-color: #733e7d;'}
-	>
-		ALLE
-	</a>
-	{categories.map((category) => (
-		<a 
-			href={`/kategorie/${category.slug}`}
-			class="rounded-full px-4 py-2 text-sm font-semibold hover:opacity-80 transition-all duration-300 text-white"
-			style={currentCategory === category.slug ? 'background-color: #41bf77;' : 'background-color: #733e7d;'}
+		<Button 
+			href="/alle-folgen"
+			size="sm"
+			active={currentCategory === undefined || currentCategory === 'alle'}
 		>
-			{category.name}
-		</a>
-	))}
+			ALLE
+		</Button>
+		{categories.map((category) => (
+			<Button 
+				href={`/kategorie/${category.slug}`}
+				size="sm"
+				active={currentCategory === category.slug}
+			>
+				{category.name}
+			</Button>
+		))}
 	</div>
 </div>
