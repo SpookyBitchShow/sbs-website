@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
 import { ClientRouter } from "astro:transitions";
-import "../styles/global.css";
 
 // Import images
 import portraitImg from '../images/portrait.webp';
@@ -62,7 +61,7 @@ const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
 <html lang="de">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.png" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
@@ -152,7 +151,7 @@ const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
 			</div>
 
 			<!-- Slanted Nav Tabs -->
-			<div class="relative z-10 mx-auto max-w-6xl -mt-4 flex items-center justify-between">
+			<div class="relative z-10 mx-auto max-w-6xl -mt-4 flex flex-col md:flex-row items-center justify-between gap-4">
 				<nav class="nav-tabs gap-1">
 					<a href="/" class={`tab ${currentPage === "home" ? "tab--green" : "tab--purple"} text-sm tracking-wide`}><span class="tab__label">Home</span></a>
 					<a href="/hosts" class={`tab ${currentPage === "hosts" ? "tab--green" : "tab--purple"} text-sm tracking-wide`}><span class="tab__label">Die Hosts</span></a>
@@ -160,10 +159,10 @@ const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
 				</nav>
 				
 				<!-- Social Media Icons -->
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-3 md:gap-4">
 					{socialLinks.map((social) => (
 						<a href={social.url} target="_blank" rel="noopener noreferrer" class="hover:opacity-80 transition-opacity duration-300">
-							<Image src={social.icon} alt={social.name} class="w-8 h-8 object-contain" width={32} height={32} format="webp" />
+							<Image src={social.icon} alt={social.name} class="w-6 h-6 md:w-8 md:h-8 object-contain" width={32} height={32} format="webp" />
 						</a>
 					))}
 				</div>
