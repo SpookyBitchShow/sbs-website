@@ -47,7 +47,13 @@ if (!episode) {
 const categoryImage = categoryImages[episode.category as keyof typeof categoryImages] || mysticImg;
 ---
 
-<Layout title={`${episode.title} - Spooky Bitch Show`} currentPage="episode">
+<Layout 
+	title={`${episode.title} - Spooky Bitch Show`} 
+	currentPage="episode"
+	episodeTitle={episode.title}
+	episodeDescription={episode.description.replace(/<[^>]*>/g, '').substring(0, 160) + '...'}
+	ogImage={`/images/categories/${episode.category.replace(' ', '_')}_og.webp`}
+>
 	<!-- Episode Header -->
 	<section class="relative z-10 mx-auto max-w-4xl px-4 py-12">
 		<div class="text-center mb-8">
