@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
+import OpenGraph from '../components/OpenGraph.astro';
 
 // Import images
 import portraitImg from '../images/portrait.webp';
@@ -60,9 +61,20 @@ const socialLinks = [
 export interface Props {
 	title?: string;
 	currentPage?: string;
+	description?: string;
+	ogImage?: string;
+	episodeTitle?: string;
+	episodeDescription?: string;
 }
 
-const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
+const { 
+	title = "Spooky Bitch Show", 
+	currentPage = "home",
+	description,
+	ogImage,
+	episodeTitle,
+	episodeDescription
+} = Astro.props;
 ---
 
 <html lang="de">
@@ -72,6 +84,15 @@ const { title = "Spooky Bitch Show", currentPage = "home" } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		
+		<!-- Open Graph Meta Tags -->
+		<OpenGraph 
+			title={title}
+			description={description}
+			image={ogImage}
+			episodeTitle={episodeTitle}
+			episodeDescription={episodeDescription}
+		/>
 		
 		<!-- Performance and compression hints -->
 		<meta http-equiv="Content-Encoding" content="gzip" />
