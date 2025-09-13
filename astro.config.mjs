@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 // https://astro.build/config
 export default defineConfig({
   site: 'spookybitchshow.de',
+  base: '/',
   integrations: [
     compress({
       CSS: true,
