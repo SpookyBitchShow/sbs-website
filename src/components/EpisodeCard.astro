@@ -69,7 +69,7 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 				Your browser does not support the audio element.
 			</audio>
 		</div>
-		<div class="episode-description text-md opacity-80 line-clamp-2 transition-all duration-300 break-words" set:html={episode.description}></div>
+		<div class="episode-description text-md opacity-80 line-clamp-2 transition-all duration-300 break-words text-white" set:html={episode.description}></div>
 		<div class="flex justify-center mt-3">
 			<button class="opacity-60 hover:opacity-80 transition-opacity duration-300" onclick="toggleDescription(this)">
 				<svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
