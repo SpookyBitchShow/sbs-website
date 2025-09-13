@@ -1,6 +1,7 @@
 export interface Episode {
   id: string;
   title: string;
+  slug: string;
   description: string;
   pubDate: string;
   duration: string;
@@ -14,6 +15,25 @@ export interface PodcastFeed {
   title: string;
   description: string;
   episodes: Episode[];
+}
+
+// Generate URL-friendly slug from episode title
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[äöüß]/g, (match) => {
+      const replacements: Record<string, string> = {
+        'ä': 'ae',
+        'ö': 'oe', 
+        'ü': 'ue',
+        'ß': 'ss'
+      };
+      return replacements[match] || match;
+    })
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 // Category mapping based on iTunes image URL
@@ -144,6 +164,7 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
   return {
     id: episodeNumber,
     title,
+    slug: generateSlug(title),
     description,
     pubDate: formatDate(pubDate),
     duration,
@@ -212,6 +233,7 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
       return {
         id: episodeNumber,
         title,
+        slug: generateSlug(title),
         description: description,
         pubDate: formatDate(pubDate),
         duration,
@@ -261,4 +283,10 @@ export async function getEpisodesByCategory(category: string): Promise<Episode[]
 export async function getEpisodeById(id: string): Promise<Episode | null> {
   const feed = await fetchPodcastFeed();
   return feed.episodes.find(episode => episode.id === id) || null;
+}
+
+// Get single episode by slug
+export async function getEpisodeBySlug(slug: string): Promise<Episode | null> {
+  const feed = await fetchPodcastFeed();
+  return feed.episodes.find(episode => episode.slug === slug) || null;
 }
