@@ -70,3 +70,23 @@
 
 .nav-tabs .tab--green { --tab-bg: #41bf77; }
 .nav-tabs .tab--purple { --tab-bg: #733e7d; }
+
+a:not(.text-white) {
+	color: #FFBD59;
+}
+
+.episode-description p {
+	margin-bottom: 2rem;
+}
+
+.episode-credits, .episode-recommendation, .episode-contact, .episode-linktree {
+	color: #41bf77;
+	font-weight: 600;
+	font-size: 22px;
+}
+
+.episode-submission-call {
+	background-color: #30293e;
+	color: #41bf77;
+	font-size: 20px;
+}
