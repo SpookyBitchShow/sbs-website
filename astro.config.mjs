@@ -1,14 +1,14 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import compress from 'astro-compress';
-
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'spookybitchshow.de',
-  base: '/',
+  site: 'https://spookybitchshow.de',
   integrations: [
+    sitemap(),
     compress({
       CSS: true,
       HTML: true,
