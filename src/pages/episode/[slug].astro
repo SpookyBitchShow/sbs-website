@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import { getEpisodeBySlug, getAllEpisodes } from '../../utils/rss.ts';
+import Button from '../../components/Button.astro';
 
 // Import category images
 import mysticImg from '../../images/categories/NEW Mystic_.webp';
@@ -80,27 +81,19 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 	<section class="relative z-10 mx-auto max-w-4xl px-4 pb-8">
 		<!-- <div class="rounded-lg p-6 shadow-lg"> -->
 			<h2 class="text-2xl font-bold mb-4" style="color: #41bf77;">Über diese Episode</h2>
-			<div class="episode-description text-base leading-relaxed" set:html={episode.description}></div>
+			<div class="episode-description text-base leading-relaxed break-words" set:html={episode.description}></div>
 		<!-- </div> -->
 	</section>
 
 	<!-- Navigation Section -->
 	<section class="relative z-10 mx-auto max-w-4xl px-4 pb-8">
 		<div class="flex flex-col sm:flex-row gap-4 justify-between">
-			<a 
-				href="/alle-folgen" 
-				class="inline-flex items-center justify-center rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" 
-				style="background-color: #733e7d;"
-			>
+			<Button href="/alle-folgen" size="lg">
 				← Zurück zu allen Episoden
-			</a>
-			<a 
-				href={`/kategorie/${episode.category}`}
-				class="inline-flex items-center justify-center rounded-full px-6 py-3 text-lg font-semibold hover:opacity-80 transition-opacity duration-300 text-white" 
-				style="background-color: #41bf77;"
-			>
+			</Button>
+			<Button href={`/kategorie/${episode.category}`} size="lg" variant="secondary">
 				Mehr aus #{episode.category.toUpperCase()}
-			</a>
+			</Button>
 		</div>
 	</section>
 </Layout>
