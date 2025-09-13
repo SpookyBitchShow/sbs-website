@@ -109,6 +109,47 @@ function formatDate(dateStr: string): string {
   }
 }
 
+// Parse description and add CSS classes to specific German sentences
+function enrichDescription(description: string): string {
+  if (!description) return description;
+  
+  const patterns = [
+    {
+      pattern: /Quellenrecherche und Soundeffekte:/g,
+      className: 'episode-credits'
+    },
+    {
+      pattern: /Empfehlung der Folge:/g,
+      className: 'episode-recommendation'
+    },
+    {
+      pattern: /So erreicht ihr uns:/g,
+      className: 'episode-contact'
+    },
+    {
+      pattern: /Hast du selbst eine Geschichte, die dir bis heute\s+Gänsehaut bereitet\? Dann schick sie uns!/g,
+      className: 'episode-submission-call rounded-lg p-2 text-center'
+    },
+    {
+      pattern: /Unseren Linktree findet ihr hier/g,
+      className: 'episode-linktree'
+    }
+  ];
+  
+  let enrichedDescription = description;
+  
+  patterns.forEach(({ pattern, className }) => {
+    enrichedDescription = enrichedDescription.replace(pattern, (match) => {
+      if (className.includes('episode-submission-call')) {
+        return `<div class="${className}">${match}</div>`;
+      }
+      return `<span class="${className}">${match}</span>`;
+    });
+  });
+  
+  return enrichedDescription;
+}
+
 // Extract items from XML text using regex (server-side)
 function extractItemsFromXML(xmlText: string): string[] {
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
@@ -143,7 +184,8 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
   };
   
   const title = extractValue('title', itemXML) || 'Untitled Episode';
-  const description = extractValue('description', itemXML); // Keep HTML for rich formatting
+  const rawDescription = extractValue('description', itemXML); // Keep HTML for rich formatting
+  const description = enrichDescription(rawDescription);
   const pubDate = extractValue('pubDate', itemXML);
   const guid = extractValue('guid', itemXML) || `episode-${index + 1}`;
   
@@ -214,10 +256,11 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
     
     // Extract episodes
     const items = Array.from(xmlDoc.querySelectorAll('item'));
-    const episodes: Episode[] = items.map((item, index) => {
+    const episodes: Episode[] = items.map((item: Element, index) => {
       const guid = item.querySelector('guid')?.textContent || `episode-${index + 1}`;
       const title = item.querySelector('title')?.textContent || 'Untitled Episode';
-      const description = item.querySelector('description')?.textContent || '';
+      const rawDescription = item.querySelector('description')?.textContent || '';
+      const description = enrichDescription(rawDescription);
       const pubDate = item.querySelector('pubDate')?.textContent || '';
       const durationElement = item.querySelector('itunes\\:duration, duration');
       const duration = parseDuration(durationElement?.textContent || '');
