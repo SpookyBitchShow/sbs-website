@@ -71,6 +71,12 @@ function determineCategory(itunesImageUrl: string): string {
   if (imageUrl.includes('true_story') || imageUrl.includes('truestory')) {
     return 'true story';
   }
+    if (imageUrl.includes('spookylivereport') || imageUrl.includes('livereport')) {
+    return 'spookylivereport';
+  }
+    if (imageUrl.includes('project_everest') || imageUrl.includes('everest')) {
+    return 'projecteverest';
+  }
   
   // Default fallback
   return 'true story';
