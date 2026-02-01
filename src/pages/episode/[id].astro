@@ -51,7 +51,7 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 	<section class="relative z-10 mx-auto max-w-4xl px-4 py-12">
 		<div class="text-center mb-8">
 			<div class="w-64 h-64 mx-auto rounded-lg ring-4 ring-emerald-400/60 overflow-hidden mb-6 shadow-2xl">
-				<Image src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width={256} height={256} format="webp" />
+					<Image src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width={512} height={512} format="webp" />
 			</div>
 			<!-- <p class="text-sm uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p> -->
 			<h1 class="text-4xl font-black tracking-wider mb-4 mt-4" style="color: #41bf77;">{episode.title}</h1>
