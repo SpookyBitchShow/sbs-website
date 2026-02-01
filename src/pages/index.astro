@@ -45,7 +45,7 @@ const latestEpisodes = await getLatestEpisodes(2);
 			<section id="home" class="relative z-10 mx-auto max-w-6xl px-4 py-12">
 				<div class="flex items-center justify-center gap-6">
 					<div class="h-48 w-48 flex items-center justify-center shrink-0">
-					<Image src={microphoneImg} alt="Microphone" class="h-48 w-48 object-contain" width={384} height={384} />
+					<Image src={microphoneImg} alt="Microphone" class="h-48 w-48 object-contain" width={384} height={384} sizes="192px" quality={90} />
 					</div>
 					<div style="color: #41bf77;">
 						<p class="text-2xl font-bold uppercase tracking-wider">Ein Podcast voller Spannung, Grusel und Mystery</p>
@@ -84,7 +84,7 @@ const latestEpisodes = await getLatestEpisodes(2);
 				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
 					{Object.entries(categoryImages).map(([categoryName, categoryImage]) => (
 						<a href={`/kategorie/${categoryName}`} class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={400} height={400} />
+						<Image src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={400} height={400} sizes="(min-width:1024px) 22vw, (min-width:640px) 30vw, 100vw" quality={90} />
 						</a>
 					))}
 				</div>
