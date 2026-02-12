@@ -10,8 +10,8 @@
   <g transform="translate(0,0)">
     <rect x="60" y="60" width="1080" height="1080" rx="36" fill="#30293e" stroke="#41bf77" stroke-width="12"/>
 
-    <!-- Large centered hashtag label -->
-    <text x="600" y="590" text-anchor="middle" font-family="Inter, Roboto, Arial, sans-serif" font-size="72" fill="#41bf77" font-weight="800">#PODFLUENCER</text>
+    <!-- Large centered label (hashtag removed) -->
+    <text x="600" y="590" text-anchor="middle" font-family="Inter, Roboto, Arial, sans-serif" font-size="72" fill="#41bf77" font-weight="800">PODFLUENCER</text>
 
     <!-- Small subtitle -->
     <text x="600" y="670" text-anchor="middle" font-family="Inter, Roboto, Arial, sans-serif" font-size="28" fill="#cfc8d6">Spooky Bitch Show — Gastfolgen</text>
