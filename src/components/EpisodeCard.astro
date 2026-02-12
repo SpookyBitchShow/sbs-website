@@ -28,7 +28,7 @@ const categoryImages = {
 	'creepypasta': creepypastaImg,
 	'projecteverest': projecteverestImg,
 	'spookylivereport': spookylivereportImg,
-	'podfluencer-folgen': '/images/categories/Podfluencer.png',
+	'podfluencer-folgen': '/images/categories/Podfluencer.svg',
 };
 
 export interface Props {
@@ -52,7 +52,11 @@ const categoryImage = categoryImages[episode.category as keyof typeof categoryIm
 <div class="rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300" style="background-color: #30293e;">
 	<div class="flex items-center gap-4 mb-3">
 		<div class="w-24 h-24 rounded overflow-hidden flex-shrink-0">
-			<Image src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width={192} height={192} sizes="96px" quality={90} />
+				{typeof categoryImage === 'string' ? (
+					<img src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width="192" height="192" onerror="this.onerror=null;this.src='/images/og-logo.webp'" />
+				) : (
+					<Image src={categoryImage} alt={episode.title} class="w-full h-full object-cover" width={192} height={192} sizes="96px" quality={90} />
+				)}
 		</div>
 		<div class="flex-1 min-w-0">
 			<div class="flex items-start justify-between gap-4">

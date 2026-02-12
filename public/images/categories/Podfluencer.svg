@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="100%" height="100%" fill="#733e7d"/>
+  <g transform="translate(100,150)">
+    <rect x="0" y="0" width="1000" height="1000" rx="32" fill="#30293e" stroke="#41bf77" stroke-width="14"/>
+    <text x="500" y="520" text-anchor="middle" font-family="Inter, Roboto, Arial, sans-serif" font-size="72" fill="#FFBD59" font-weight="700">PODFLUENCER</text>
+    <text x="500" y="640" text-anchor="middle" font-family="Inter, Roboto, Arial, sans-serif" font-size="36" fill="#cfc8d6">Spooky Bitch Show — Gastfolgen</text>
+  </g>
+</svg>
