@@ -31,7 +31,7 @@ const categoryImages = {
 	'halloween': halloweenImg,
 	'projecteverest': projecteverestImg, 
 	'spookylivereport': spookylivereportImg, 
-	'podfluencer-folgen': spookylivereportImg, 
+	'podfluencer-folgen': '/images/categories/Podfluencer.png', 
 };
 
 // Fetch latest episodes from RSS feed
@@ -63,7 +63,11 @@ const latestEpisodes = await getLatestEpisodes(2);
 					{latestEpisodes.map((episode) => (
 						<div class="rounded-lg p-4 shadow-lg w-64" style="background-color: #30293e;">
 							<div class="aspect-square w-full rounded overflow-hidden mb-4">
+							{typeof categoryImages[episode.category] === 'string' ? (
+								<img src={categoryImages[episode.category]} alt={episode.title} class="w-full h-full object-cover" width="512" height="512" />
+							) : (
 								<Image src={categoryImages[episode.category]} alt={episode.title} class="w-full h-full object-cover" width={512} height={512} />
+							)}
 							</div>
 							<div class="text-center">
 								<p class="text-xs uppercase tracking-wide mb-2" style="color: #41bf77;">#{episode.category.toUpperCase()}</p>
@@ -85,7 +89,11 @@ const latestEpisodes = await getLatestEpisodes(2);
 				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
 					{Object.entries(categoryImages).map(([categoryName, categoryImage]) => (
 						<a href={`/kategorie/${categoryName}`} class="aspect-square w-full rounded-lg hover:ring-4 hover:ring-emerald-400/60 overflow-hidden hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer">
-						<Image src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={400} height={400} sizes="(min-width:1024px) 22vw, (min-width:640px) 30vw, 100vw" quality={90} />
+						{typeof categoryImage === 'string' ? (
+							<img src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width="400" height="400" />
+						) : (
+							<Image src={categoryImage} alt={`#${categoryName.toUpperCase()}`} class="w-full h-full object-cover hover:brightness-110 transition-all duration-300" width={400} height={400} sizes="(min-width:1024px) 22vw, (min-width:640px) 30vw, 100vw" quality={90} />
+						)}
 						</a>
 					))}
 				</div>
