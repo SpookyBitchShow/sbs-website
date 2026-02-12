@@ -9,6 +9,9 @@ export interface Episode {
   category: string;
   imageUrl?: string;
   guid: string;
+  // Mark episodes that originate from the external "Podfluencer" feed
+  isPodfluencer?: boolean;
+  source?: 'local' | 'external';
 }
 
 export interface PodcastFeed {
@@ -225,82 +228,111 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
 
 export async function fetchPodcastFeed(): Promise<PodcastFeed> {
   try {
-    const response = await fetch('https://0666sbs.podcaster.de/spooky-bitch-show.rss');
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const xmlText = await response.text();
-    console.log('RSS feed fetched successfully, length:', xmlText.length);
-    
-    // Use a simple XML parser for Node.js environment
-    // Parse XML manually since DOMParser isn't available server-side
-    let xmlDoc: any;
-    
-    // Try to use DOMParser if available (client-side)
+    // Fetch main feed and external feed in parallel
+    const [mainResp, externalResp] = await Promise.all([
+      fetch('https://0666sbs.podcaster.de/spooky-bitch-show.rss'),
+      fetch('https://diepodfluencer.podcaster.de/die-podfluencer.rss')
+    ]);
+
+    if (!mainResp.ok) throw new Error(`Main RSS HTTP error! status: ${mainResp.status}`);
+    if (!externalResp.ok) console.warn('External RSS fetch failed, continuing without it:', externalResp.status);
+
+    const mainXml = await mainResp.text();
+    const externalXml = externalResp.ok ? await externalResp.text() : '';
+
+    // Parse main feed using existing logic (prefer DOMParser if available)
+    let mainEpisodes: Episode[] = [];
+    let channelTitle = 'Spooky Bitch Show';
+    let channelDescription = 'Der Grusel und Mystery Podcast';
+
     if (typeof DOMParser !== 'undefined') {
       const parser = new DOMParser();
-      xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      const xmlDoc = parser.parseFromString(mainXml, 'text/xml');
+      const channel = xmlDoc.querySelector('channel');
+      channelTitle = channel?.querySelector('title')?.textContent || channelTitle;
+      channelDescription = channel?.querySelector('description')?.textContent || channelDescription;
+
+      const items = Array.from(xmlDoc.querySelectorAll('item'));
+      mainEpisodes = items.map((item: Element, index) => {
+        const guid = item.querySelector('guid')?.textContent || `episode-${index + 1}`;
+        const title = item.querySelector('title')?.textContent || 'Untitled Episode';
+        const rawDescription = item.querySelector('description')?.textContent || '';
+        const description = enrichDescription(rawDescription);
+        const pubDate = item.querySelector('pubDate')?.textContent || '';
+        const durationElement = item.querySelector('itunes\\:duration, duration');
+        const duration = parseDuration(durationElement?.textContent || '');
+        const enclosure = item.querySelector('enclosure');
+        const audioUrl = enclosure?.getAttribute('url') || '';
+        const imageElement = item.querySelector('itunes\\:image, image');
+        const imageUrl = imageElement?.getAttribute('href') || imageElement?.getAttribute('url') || '';
+
+        const episodeMatch = title.match(/#(\d+)/);
+        const episodeNumber = episodeMatch ? episodeMatch[1] : String(items.length - index);
+
+        return {
+          id: episodeNumber,
+          title,
+          slug: generateSlug(title),
+          description,
+          pubDate: formatDate(pubDate),
+          duration,
+          audioUrl,
+          category: determineCategory(imageUrl),
+          imageUrl,
+          guid
+        };
+      });
     } else {
-      // Server-side parsing - use a simple regex-based approach for now
-      const items = extractItemsFromXML(xmlText);
-      const channelTitle = xmlText.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] || 
-                          xmlText.match(/<title>(.*?)<\/title>/)?.[1] || 
-                          'Spooky Bitch Show';
-      
-      return {
-        title: channelTitle.replace('Spooky Bitch Show', 'Spooky Bitch Show'),
-        description: 'Der Grusel und Mystery Podcast',
-        episodes: items.map((item, index) => parseEpisodeItem(item, index, items.length))
-      };
+      // Server-side fallback parsing for main feed
+      const items = extractItemsFromXML(mainXml);
+      channelTitle = mainXml.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/)?.[1] || mainXml.match(/<title>(.*?)<\/title>/)?.[1] || channelTitle;
+      mainEpisodes = items.map((item, index) => parseEpisodeItem(item, index, items.length));
     }
-    
-    // Extract channel info
-    const channel = xmlDoc.querySelector('channel');
-    const title = channel?.querySelector('title')?.textContent || 'Spooky Bitch Show';
-    const description = channel?.querySelector('description')?.textContent || '';
-    
-    // Extract episodes
-    const items = Array.from(xmlDoc.querySelectorAll('item'));
-    const episodes: Episode[] = items.map((item: Element, index) => {
-      const guid = item.querySelector('guid')?.textContent || `episode-${index + 1}`;
-      const title = item.querySelector('title')?.textContent || 'Untitled Episode';
-      const rawDescription = item.querySelector('description')?.textContent || '';
-      const description = enrichDescription(rawDescription);
-      const pubDate = item.querySelector('pubDate')?.textContent || '';
-      const durationElement = item.querySelector('itunes\\:duration, duration');
-      const duration = parseDuration(durationElement?.textContent || '');
-      const enclosure = item.querySelector('enclosure');
-      const audioUrl = enclosure?.getAttribute('url') || '';
-      const imageElement = item.querySelector('itunes\\:image, image');
-      const imageUrl = imageElement?.getAttribute('href') || imageElement?.getAttribute('url') || '';
-      
-      // Extract episode number from title if available
-      const episodeMatch = title.match(/#(\d+)/);
-      const episodeNumber = episodeMatch ? episodeMatch[1] : String(items.length - index);
-      
-      return {
-        id: episodeNumber,
-        title,
-        slug: generateSlug(title),
-        description: description,
-        pubDate: formatDate(pubDate),
-        duration,
-        audioUrl,
-        category: determineCategory(imageUrl),
-        imageUrl,
-        guid
-      };
+
+    // Parse external feed (simple server-side/regEx approach) and include only episodes
+    // whose title contains "Spooky Bitch Show" (case-insensitive). Do not use external images.
+    let externalEpisodes: Episode[] = [];
+    if (externalXml) {
+      const extItems = extractItemsFromXML(externalXml);
+      externalEpisodes = extItems
+        .map((item, index) => parseEpisodeItem(item, index, extItems.length))
+        .filter(ep => /spooky bitch show/i.test(ep.title)) // keep only relevant episodes
+        .map(ep => ({
+          ...ep,
+          // force empty image so site will use category/default images
+          imageUrl: '',
+          // classify external Podfluencer episodes into their own category
+          category: 'podfluencer-folgen',
+          // mark as originating from the external Podfluencer feed
+          isPodfluencer: true,
+          source: 'external'
+        }));
+    }
+
+    // Merge episodes and dedupe by guid (external episodes may share titles)
+    const merged = [...mainEpisodes, ...externalEpisodes];
+    const map = new Map<string, Episode>();
+    for (const e of merged) {
+      const key = e.guid || e.slug || `${e.title}-${e.pubDate}`;
+      if (!map.has(key)) map.set(key, e);
+    }
+
+    const episodes = Array.from(map.values()).sort((a, b) => {
+      // Try numeric id sort first, otherwise fall back to pubDate
+      const ai = parseInt(a.id || '0', 10);
+      const bi = parseInt(b.id || '0', 10);
+      if (!isNaN(ai) && !isNaN(bi)) return bi - ai;
+      return (new Date(b.pubDate).getTime() || 0) - (new Date(a.pubDate).getTime() || 0);
     });
-    
+
     return {
-      title,
-      description,
-      episodes: episodes.sort((a, b) => parseInt(b.id) - parseInt(a.id)) // Sort by episode number descending
+      title: channelTitle,
+      description: channelDescription,
+      episodes
     };
   } catch (error) {
     console.error('Error fetching RSS feed:', error);
-    
+
     // Return fallback data if RSS fetch fails
     return {
       title: 'Spooky Bitch Show',

@@ -31,6 +31,7 @@ const categoryImages = {
 	'creepypasta': creepypastaImg, 
 	'projecteverest': projecteverestImg, 
 	'spookylivereport': spookylivereportImg, 
+	'podfluencer-folgen': newsImg, // reuse news image as default for Podfluencer entries
 };
 
 // Category display names
@@ -46,13 +47,14 @@ const categoryNames = {
 	'creepypasta': 'Creepypasta',
 	'projecteverest': 'Project Everest', 
 	'spookylivereport': 'Spooky Live Report', 
+	'podfluencer-folgen': 'Podfluencer-Folgen',
 };
 
 // Generate static paths for all categories
 export async function getStaticPaths() {
 	const categories = [
 		'mystic', 'true story', 'true crime', 'paranormal', 
-		'creature', 'news', 'filmreview', 'halloween', 'creepypasta', 'projecteverest', 'spookylivereport'
+		'creature', 'news', 'filmreview', 'halloween', 'creepypasta', 'projecteverest', 'spookylivereport', 'podfluencer-folgen'
 	];
 	
 	return categories.map(category => ({
