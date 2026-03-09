@@ -318,11 +318,19 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
     }
 
     const episodes = Array.from(map.values()).sort((a, b) => {
-      // Try numeric id sort first, otherwise fall back to pubDate
+      // Sort chronologically by publication date (newest first).
+      // Use numeric id only as a tiebreaker if dates are equal and both ids are numeric.
+      const dateA = new Date(a.pubDate).getTime() || 0;
+      const dateB = new Date(b.pubDate).getTime() || 0;
+      if (dateA !== dateB) {
+        return dateB - dateA;
+      }
       const ai = parseInt(a.id || '0', 10);
       const bi = parseInt(b.id || '0', 10);
-      if (!isNaN(ai) && !isNaN(bi)) return bi - ai;
-      return (new Date(b.pubDate).getTime() || 0) - (new Date(a.pubDate).getTime() || 0);
+      if (!isNaN(ai) && !isNaN(bi)) {
+        return bi - ai;
+      }
+      return 0;
     });
 
     return {
@@ -345,7 +353,11 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
 // Get latest episodes (for homepage)
 export async function getLatestEpisodes(count: number = 2): Promise<Episode[]> {
   const feed = await fetchPodcastFeed();
-  return feed.episodes.slice(0, count);
+  // feed.episodes should already be sorted by date, but sort again just in case
+  const sorted = [...feed.episodes].sort(
+    (a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+  );
+  return sorted.slice(0, count);
 }
 
 // Get all episodes (for alle-folgen page)
