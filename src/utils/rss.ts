@@ -3,7 +3,8 @@ export interface Episode {
   title: string;
   slug: string;
   description: string;
-  pubDate: string;
+  pubDate: string;            // human-readable date for display
+  pubDateRaw?: string;        // original RFC date string used for sorting
   duration: string;
   audioUrl: string;
   category: string;
@@ -218,6 +219,7 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
     slug: generateSlug(title),
     description,
     pubDate: formatDate(pubDate),
+    pubDateRaw: pubDate,
     duration,
     audioUrl,
     category: determineCategory(itunesImageUrl),
@@ -275,6 +277,7 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
           slug: generateSlug(title),
           description,
           pubDate: formatDate(pubDate),
+          pubDateRaw: pubDate,
           duration,
           audioUrl,
           category: determineCategory(imageUrl),
@@ -318,10 +321,14 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
     }
 
     const episodes = Array.from(map.values()).sort((a, b) => {
-      // Sort chronologically by publication date (newest first).
-      // Use numeric id only as a tiebreaker if dates are equal and both ids are numeric.
-      const dateA = new Date(a.pubDate).getTime() || 0;
-      const dateB = new Date(b.pubDate).getTime() || 0;
+      // Sort chronologically by raw publication date (newest first).
+      // pubDateRaw is the original RSS string; fallback to formatted pubDate if absent.
+      const getTime = (ep: Episode) => {
+        const d = new Date(ep.pubDateRaw || ep.pubDate);
+        return d.getTime() || 0;
+      };
+      const dateA = getTime(a);
+      const dateB = getTime(b);
       if (dateA !== dateB) {
         return dateB - dateA;
       }
@@ -355,7 +362,11 @@ export async function getLatestEpisodes(count: number = 2): Promise<Episode[]> {
   const feed = await fetchPodcastFeed();
   // feed.episodes should already be sorted by date, but sort again just in case
   const sorted = [...feed.episodes].sort(
-    (a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
+    (a, b) => {
+      const ta = new Date(a.pubDateRaw || a.pubDate).getTime();
+      const tb = new Date(b.pubDateRaw || b.pubDate).getTime();
+      return tb - ta;
+    }
   );
   // Homepage "latest" should ignore external Podfluencer episodes
   const filtered = sorted.filter(ep => !ep.isPodfluencer);
@@ -365,13 +376,18 @@ export async function getLatestEpisodes(count: number = 2): Promise<Episode[]> {
 // Get all episodes (for alle-folgen page)
 export async function getAllEpisodes(): Promise<Episode[]> {
   const feed = await fetchPodcastFeed();
-  return feed.episodes;
+  // ensure chronological order just in case
+  return [...feed.episodes].sort(
+    (a, b) => new Date(b.pubDateRaw || b.pubDate).getTime() - new Date(a.pubDateRaw || a.pubDate).getTime()
+  );
 }
 
 // Get episodes by category
 export async function getEpisodesByCategory(category: string): Promise<Episode[]> {
   const feed = await fetchPodcastFeed();
-  return feed.episodes.filter(episode => episode.category === category);
+  return feed.episodes
+    .filter(episode => episode.category === category)
+    .sort((a, b) => new Date(b.pubDateRaw || b.pubDate).getTime() - new Date(a.pubDateRaw || a.pubDate).getTime());
 }
 
 // Get single episode by ID
