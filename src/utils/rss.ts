@@ -357,7 +357,9 @@ export async function getLatestEpisodes(count: number = 2): Promise<Episode[]> {
   const sorted = [...feed.episodes].sort(
     (a, b) => new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
   );
-  return sorted.slice(0, count);
+  // Homepage "latest" should ignore external Podfluencer episodes
+  const filtered = sorted.filter(ep => !ep.isPodfluencer);
+  return filtered.slice(0, count);
 }
 
 // Get all episodes (for alle-folgen page)
