@@ -72,11 +72,23 @@ function determineCategory(itunesImageUrl: string): string {
   if (imageUrl.includes('news')) {
     return 'news';
   }
+  // Detect Spooky Live Report in various filename encodings (hyphens, underscores, spaces)
+  if (
+    imageUrl.includes('spookylivereport') ||
+    imageUrl.includes('spooky_live') ||
+    imageUrl.includes('spooky-live') ||
+    imageUrl.includes('spooky%20live') ||
+    (imageUrl.includes('spooky') && imageUrl.includes('live')) ||
+    imageUrl.includes('livereport') ||
+    imageUrl.includes('live-report') ||
+    imageUrl.includes('live_report') ||
+    imageUrl.includes('spookylive')
+  ) {
+    return 'spookylivereport';
+  }
+
   if (imageUrl.includes('true_story') || imageUrl.includes('truestory')) {
     return 'true story';
-  }
-    if (imageUrl.includes('spookylivereport') || imageUrl.includes('livereport')) {
-    return 'spookylivereport';
   }
     if (imageUrl.includes('project_everest') || imageUrl.includes('everest')) {
     return 'projecteverest';
