@@ -14,7 +14,7 @@ import creatureImg from '../../images/categories/RETRO-Creature.webp';
 import newsImg from '../../images/categories/RETRo-News.webp';
 import filmreviewImg from '../../images/categories/RETRO-Filmreview.webp';
 import halloweenImg from '../../images/categories/RETRO-Halloween.webp';
-import creepypastaImg from '../../images/categories/RETRO-Horror.webp';
+import horrorImg from '../../images/categories/RETRO-Horror.webp';
 import spookylivereportImg from '../../images/categories/RETRO-Spooky-Live-Report.webp';
 import projecteverestImg from '../../images/categories/NEW Project Everest.webp';
 import podfluencerImg from '../../images/categories/Podfluencer.webp';
@@ -29,7 +29,7 @@ const categoryImages = {
 	'news': newsImg,
 	'filmreview': filmreviewImg,
 	'halloween': halloweenImg,
-	'creepypasta': creepypastaImg, 
+	'horror': horrorImg, 
 	'projecteverest': projecteverestImg, 
 	'spookylivereport': spookylivereportImg, 
 	'podfluencer-folgen': podfluencerImg,
@@ -45,7 +45,7 @@ const categoryNames = {
 	'news': 'News',
 	'filmreview': 'Filmreview',
 	'halloween': 'Halloween',
-	'creepypasta': 'Creepypasta',
+	'horror': 'Horror',
 	'projecteverest': 'Project Everest', 
 	'spookylivereport': 'Spooky Live Report', 
 	'podfluencer-folgen': 'Podfluencer-Folgen',
@@ -55,7 +55,7 @@ const categoryNames = {
 export async function getStaticPaths() {
 	const categories = [
 		'mystic', 'true story', 'true crime', 'paranormal', 
-		'creature', 'news', 'filmreview', 'halloween', 'creepypasta', 'projecteverest', 'spookylivereport', 'podfluencer-folgen'
+		'creature', 'news', 'filmreview', 'halloween', 'horror', 'projecteverest', 'spookylivereport', 'podfluencer-folgen'
 	];
 	
 	return categories.map(category => ({

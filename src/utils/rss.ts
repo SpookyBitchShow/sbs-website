@@ -77,7 +77,7 @@ function determineCategory(itunesImageUrl: string, title?: string): string {
     return 'filmreview';
   }
   if (imageUrl.includes('creepypasta')) {
-    return 'creepypasta';
+    return 'horror';
   }
   if (imageUrl.includes('news')) {
     return 'news';
