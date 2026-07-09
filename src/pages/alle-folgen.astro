@@ -1,31 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { getAllEpisodes } from '../utils/rss.ts';
-import CategoryFilter from '../components/CategoryFilter.astro';
+import CategoryFilter from '../components/CategoryFilter.astro'; 
 import EpisodeCard from '../components/EpisodeCard.astro';
-import mysticImgUrl from '../images/categories/RETRO-Mystic.webp?url';
-import trueStoryImgUrl from '../images/categories/RETRO-TrueStory.webp?url';
-import trueCrimeImgUrl from '../images/categories/RETRO-TrueCrime.webp?url';
-import paranormalImgUrl from '../images/categories/RETRO Paranormal.webp?url';
-import creatureImgUrl from '../images/categories/RETRO-Creature.webp?url';
-import newsImgUrl from '../images/categories/RETRo-News.webp?url';
-import filmreviewImgUrl from '../images/categories/RETRO-Filmreview.webp?url';
-import halloweenImgUrl from '../images/categories/RETRO-Halloween.webp?url';
-import horrorImgUrl from '../images/categories/RETRO-Horror.webp?url';
-import spookyliveImgUrl from '../images/categories/RETRO-Spooky-Live-Report.webp?url';
-
-const categoryImageMap = {
-	'mystic': mysticImgUrl,
-	'true story': trueStoryImgUrl,
-	'true crime': trueCrimeImgUrl,
-	'paranormal': paranormalImgUrl,
-	'creature': creatureImgUrl,
-	'horror': horrorImgUrl,
-	'news': newsImgUrl,
-	'filmreview': filmreviewImgUrl,
-	'halloween': halloweenImgUrl,
-	'spookylivereport': spookyliveImgUrl,
-};
 
 // Fetch real episode data from RSS feed
 const episodes = await getAllEpisodes();
@@ -40,105 +17,18 @@ const episodes = await getAllEpisodes();
 		<!-- Filter Section -->
 		<CategoryFilter currentCategory="alle" />
 		
-		<div class="text-center mb-8">
-			<button id="loadMoreEpisodes" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200">Mehr Folgen laden</button>
-			<p id="loadMoreStatus" class="text-sm opacity-80 mt-3"></p>
-		</div>
-
-		<div id="episodesRoot" data-initial-count={episodes.length}>
-			<div id="episodesList" class="space-y-4 mt-8">
-				{episodes.map((episode) => (
-					<EpisodeCard episode={episode} />
-				))}
-			</div>
+		<div class="space-y-4 mt-8">
+			{episodes.map((episode) => (
+				<EpisodeCard episode={episode} />
+			))}
 		</div>
 	</section>
 </Layout>
 
-<script id="categoryImageMapJson" type="application/json">{JSON.stringify(categoryImageMap)}</script>
 <link rel="stylesheet" href="https://cdn.plyr.io/3.8.3/plyr.css" />
 <script src="https://cdn.plyr.io/3.8.3/plyr.js"></script>
 
-<script type="module">
-const categoryImageMap = JSON.parse(document.getElementById('categoryImageMapJson').textContent);
-const loadMoreButton = document.getElementById('loadMoreEpisodes');
-const loadMoreStatus = document.getElementById('loadMoreStatus');
-const episodesList = document.getElementById('episodesList');
-const initialEpisodeCount = Number(document.getElementById('episodesRoot').dataset.initialCount || 0);
-
-function createEpisodeCard(episode) {
-	const imageSrc = categoryImageMap[episode.category] || categoryImageMap['mystic'];
-	return `
-		<div class="rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow duration-300" style="background-color: #30293e;">
-			<div class="flex items-center gap-4 mb-3">
-				<div class="w-24 h-24 rounded overflow-hidden flex-shrink-0">
-					<img src="${imageSrc}" alt="${episode.title.replace(/"/g, '&quot;')}" class="w-full h-full object-cover" width="192" height="192" onerror="this.onerror=null;this.src='/images/og-logo.webp'" />
-				</div>
-				<div class="flex-1 min-w-0">
-					<div class="flex items-start justify-between gap-4">
-						<div class="flex-1 min-w-0">
-							<div class="flex items-center gap-3">
-								<p class="text-xs uppercase tracking-wide mb-1" style="color: #41bf77;">#${episode.category.toUpperCase()}</p>
-							</div>
-							<a href="/episode/${episode.slug}" class="font-bold text-xl hover:opacity-80 transition-opacity duration-300 block break-words">${episode.title}</a>
-							<p class="text-md opacity-70 mt-1">Dauer: ${episode.duration} • Veröffentlicht am ${episode.pubDate}</p>
-						</div>
-						<div class="flex items-center gap-2 flex-shrink-0">
-							<a href="/episode/${episode.slug}" class="inline-flex items-center justify-center rounded bg-[#41bf77] px-4 py-2 text-sm font-semibold text-black hover:opacity-90 transition-opacity duration-200">Details</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div>
-				<div class="mb-4">
-					<audio class="episode-player" controls preload="none">
-						<source src="${episode.audioUrl}" type="audio/mpeg" />
-						Your browser does not support the audio element.
-					</audio>
-				</div>
-				<div class="episode-description text-md opacity-80 line-clamp-2 transition-all duration-300 break-words text-white">${episode.description}</div>
-				<div class="flex justify-center mt-3">
-					<button class="opacity-60 hover:opacity-80 transition-opacity duration-300" onclick="toggleDescription(this)">
-						<svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-						</svg>
-					</button>
-				</div>
-			</div>
-		</div>
-	`;
-}
-
-async function loadMoreEpisodes() {
-	loadMoreButton.disabled = true;
-	loadMoreStatus.textContent = 'Lade zusätzliche Folgen...';
-
-	try {
-		const response = await fetch('/api/episodes');
-		if (!response.ok) {
-			throw new Error('Fehler beim Laden der Episoden');
-		}
-
-		const data = await response.json();
-		const episodes = data.episodes || [];
-
-		if (episodes.length <= initialEpisodeCount) {
-			loadMoreStatus.textContent = 'Es sind derzeit keine weiteren Folgen verfügbar.';
-			return;
-		}
-
-		episodesList.innerHTML = episodes.map(createEpisodeCard).join('');
-		loadMoreStatus.textContent = `Es wurden ${episodes.length - initialEpisodeCount} zusätzliche Folgen geladen.`;
-	} catch (error) {
-		loadMoreStatus.textContent = 'Beim Nachladen der Folgen ist ein Fehler aufgetreten.';
-		console.error(error);
-	} finally {
-		loadMoreButton.disabled = false;
-	}
-}
-
-loadMoreButton.addEventListener('click', loadMoreEpisodes);
-
+<script>
 let players = [];
 
 // Initialize Plyr audio players
