@@ -246,8 +246,8 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
   // Extract audio URL from enclosure
   const audioUrl = extractAttribute('enclosure', 'url', itemXML);
   
-  // Extract iTunes image URL
-  const itunesImageUrl = extractAttribute('itunes:image', 'href', itemXML);
+  // Extract iTunes image URL or fallback to media:content image URL
+  const itunesImageUrl = extractAttribute('itunes:image', 'href', itemXML) || extractAttribute('media:content', 'url', itemXML);
   
   // Extract episode number from title
   const episodeMatch = title.match(/#(\d+)/);
@@ -305,7 +305,7 @@ export async function fetchPodcastFeed(): Promise<PodcastFeed> {
         const duration = parseDuration(durationElement?.textContent || '');
         const enclosure = item.querySelector('enclosure');
         const audioUrl = enclosure?.getAttribute('url') || '';
-        const imageElement = item.querySelector('itunes\\:image, image');
+      const imageElement = item.querySelector('itunes\:image, image, media\:content');
         const imageUrl = imageElement?.getAttribute('href') || imageElement?.getAttribute('url') || '';
 
         const episodeMatch = title.match(/#(\d+)/);
