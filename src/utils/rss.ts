@@ -41,11 +41,21 @@ function generateSlug(title: string): string {
 }
 
 // Category mapping based on iTunes image URL
-function determineCategory(itunesImageUrl: string): string {
+function determineCategory(itunesImageUrl: string, title?: string): string {
   if (!itunesImageUrl) {
+    const t = (title || '').toLowerCase();
+    if (
+      t.includes('spooky live') ||
+      t.includes('spooky live report') ||
+      (t.includes('spooky') && t.includes('live')) ||
+      t.includes('live report') ||
+      t.includes('livereport')
+    ) {
+      return 'spookylivereport';
+    }
     return 'true story'; // Default fallback
   }
-  
+
   const imageUrl = itunesImageUrl.toLowerCase();
   
   if (imageUrl.includes('halloween')) {
@@ -89,6 +99,18 @@ function determineCategory(itunesImageUrl: string): string {
 
   if (imageUrl.includes('true_story') || imageUrl.includes('truestory')) {
     return 'true story';
+  }
+
+  // As a last resort, also check the title for hints (covers may be missing)
+  const t = (title || '').toLowerCase();
+  if (
+    t.includes('spooky live') ||
+    t.includes('spooky live report') ||
+    (t.includes('spooky') && t.includes('live')) ||
+    t.includes('live report') ||
+    t.includes('livereport')
+  ) {
+    return 'spookylivereport';
   }
     if (imageUrl.includes('project_everest') || imageUrl.includes('everest')) {
     return 'projecteverest';
@@ -234,7 +256,7 @@ function parseEpisodeItem(itemXML: string, index: number, totalItems: number): E
     pubDateRaw: pubDate,
     duration,
     audioUrl,
-    category: determineCategory(itunesImageUrl),
+      category: determineCategory(itunesImageUrl, title),
     imageUrl: '',
     guid
   };
