@@ -76,7 +76,7 @@ function determineCategory(itunesImageUrl: string, title?: string): string {
   if (imageUrl.includes('filmreview') || imageUrl.includes('film_review')) {
     return 'filmreview';
   }
-  if (imageUrl.includes('creepypasta')) {
+  if (imageUrl.includes('creepypasta') || imageUrl.includes('horror')) {
     return 'horror';
   }
   if (imageUrl.includes('news')) {
@@ -112,7 +112,13 @@ function determineCategory(itunesImageUrl: string, title?: string): string {
   ) {
     return 'spookylivereport';
   }
-    if (imageUrl.includes('project_everest') || imageUrl.includes('everest')) {
+  if (
+    t.includes('creepypasta') ||
+    t.includes('horror')
+  ) {
+    return 'horror';
+  }
+  if (imageUrl.includes('project_everest') || imageUrl.includes('everest')) {
     return 'projecteverest';
   }
   
